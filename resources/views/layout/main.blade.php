@@ -208,7 +208,7 @@
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
-            <a href="{{ route('dashboard') }}" class="nav-link">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Dashboard
@@ -216,10 +216,18 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('index') }}" class="nav-link">
+            <a href="{{ route('admin.index') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Users
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('logout') }}" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Logout
               </p>
             </a>
           </li>
