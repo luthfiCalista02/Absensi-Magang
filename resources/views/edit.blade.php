@@ -21,15 +21,16 @@
 
     <section class="content">
         <div class="container-fluid">
-            <form action="{{ route('user.update',['id' => $data->id]) }}" method="POST">
+            <form action="{{ route('admin.user.update',['id' => $data->id]) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="row">
                     <!-- left column -->
                     <div class="col-md-6">
+                        <a href="{{ route('admin.index') }}" class="btn btn-secondary mb-3">Kembali</a>
                       <!-- general form elements -->
                       <div class="card card-primary">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #b11313;">
                           <h3 class="card-title">Form Edit User</h3>
                         </div>
                         <!-- /.card-header -->
@@ -45,8 +46,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Nama</label>
-                                <input type="text" name="nama" class="form-control" id="exampleInputEmail1" value="{{ $data->name }}" placeholder="Enter name">
-                                @error('nama')
+                                <input type="text" name="name" class="form-control" id="exampleInputEmail1" value="{{ $data->name }}" placeholder="Enter name">
+                                @error('name')
                                 <small>{{ $message }}</small>
                                 @enderror
                             </div>

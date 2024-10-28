@@ -21,14 +21,14 @@
 
     <section class="content">
         <div class="container-fluid">
-            <form action="{{ route('user.store') }}" method="POST">
+            <form action="{{ route('admin.user.store') }}" method="POST">
                 @csrf
                 <div class="row">
                     <!-- left column -->
                     <div class="col-md-6">
                       <!-- general form elements -->
                       <div class="card card-primary">
-                        <div class="card-header">
+                        <div class="card-header" style="background-color: #b11313">
                           <h3 class="card-title">Form Tambah User</h3>
                         </div>
                         <!-- /.card-header -->

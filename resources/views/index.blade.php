@@ -24,10 +24,10 @@
       <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <a href="{{ route('user.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+                <a href="{{ route('admin.user.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
               <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Tabel User</h3>
+                <div class="card-header" style="background-color: #b11313">
+                  <h3 class="card-title" style="color: #ffffff">Tabel User</h3>
 
                   <div class="card-tools">
                     <div class="input-group input-group-sm" style="width: 150px;">
@@ -59,16 +59,16 @@
                                 <td>{{ $d->name }}</td>
                                 <td>{{ $d->email }}</td>
                                 <td>
-                                    <a href="{{ route('user.edit',['id' => $d->id]) }}" class="btn btn-primary"><i class="fas fa-pen"></i> Edit</a>
+                                    <a href="{{ route('admin.user.edit',['id' => $d->id]) }}" class="btn btn-primary"><i class="fas fa-pen"></i> Edit</a>
                                     <a data-toggle="modal" data-target="#modal-hapus{{ $d->id }}" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Hapus</a>
                                 </td>
                             </tr>
                             <div class="modal fade" id="modal-hapus{{ $d->id }}">
                                 <div class="modal-dialog">
                                   <div class="modal-content">
-                                    <div class="modal-header">
-                                      <h4 class="modal-title">Konfirmasi Hapus Data</h4>
-                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <div class="modal-header" style="background-color: #b11313;">
+                                      <h4 class="modal-title" style="color: #ffffff">Konfirmasi Hapus Data</h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #ffffff">
                                         <span aria-hidden="true">&times;</span>
                                       </button>
                                     </div>
@@ -76,8 +76,8 @@
                                       <p>Apakah Anda yakin ingin menghapus data user <b>{{ $d->name }}</b>?</p>
                                     </div>
                                     <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Urungkan</button>
-                                        <form action="{{ route('user.delete',['id' => $d->id]) }}" method="POST">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Urungkan</button>
+                                        <form action="{{ route('admin.user.delete',['id' => $d->id]) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
 
