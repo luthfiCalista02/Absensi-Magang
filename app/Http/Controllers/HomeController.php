@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
@@ -28,6 +30,7 @@ class HomeController extends Controller
     public function store(Request $request){
 
         $validator = Validator::make($request->all(),[
+            'photo'     => 'required|mimes:png,jpg,jpeg|max:2048',
             'email'     => 'required|email',
             'nama'      => 'required',
             'password'  => 'required',
@@ -35,13 +38,20 @@ class HomeController extends Controller
 
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
+
+        $photo      = $request->file('photo');
+        $filename   = date('Y-m-d').$photo->getClientOriginalName();
+        $path       = 'photo-user/'.$filename;
+
+        Storage::disk('public')->put($path,file_get_contents($photo));
+
         $data['email']      = $request->email;
         $data['name']       = $request->nama;
         $data['password']   = Hash::make($request->password);
-
+        $data['image']      = $filename;
         User::create($data);
 
-        return redirect()->route('index');
+        return redirect()->route('admin.index');
     }
 
     public function edit(Request $request,$id){
@@ -51,10 +61,12 @@ class HomeController extends Controller
     }
 
     public function update(Request $request,$id){
+
         $validator = Validator::make($request->all(),[
             'email'     => 'required|email',
             'nama'      => 'required',
             'password'  => 'nullable',
+            'photo'     => 'nullable||mimes:png,jpg,jpeg|max:2048'
         ]);
 
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
@@ -64,6 +76,17 @@ class HomeController extends Controller
 
         if($request->password){
             $data['password']   = Hash::make($request->password);
+        }
+
+        $photo      = $request->file('photo');
+
+        if ($photo) {
+            $filename   = date('Y-m-d').$photo->getClientOriginalName();
+            $path       = 'photo-user/'.$filename;
+
+            Storage::disk('public')->put($path,file_get_contents($photo));
+
+            $data['image']  = $filename;
         }
 
         User::whereId($id)->update($data);
