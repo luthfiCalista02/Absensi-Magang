@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,11 +17,18 @@ class HomeController extends Controller
         return view('dashboard');
     }
 
-    public function index(){
+    public function index(Request $request){
 
-        $data = User::get();
+        $data = new User;
 
-        return view('index',compact('data'));
+        if ($request->get('search')) {
+            $data = $data->where('name','LIKE','%'.$request->get('search').'%')
+            ->orWhere('email','LIKE','%'.$request->get('search').'%');
+        }
+
+        $data = $data->get();
+
+        return view('index',compact('data','request'));
     }
 
     public function create(){
@@ -41,7 +49,7 @@ class HomeController extends Controller
 
         $photo      = $request->file('photo');
         $filename   = date('Y-m-d').$photo->getClientOriginalName();
-        $path       = 'photo-user/'.$filename;
+        $path       = 'photo-user/' . $filename;
 
         Storage::disk('public')->put($path,file_get_contents($photo));
 
@@ -60,38 +68,42 @@ class HomeController extends Controller
         return view('edit',compact('data'));
     }
 
-    public function update(Request $request,$id){
-
+    public function update(Request $request,$id) {
         $validator = Validator::make($request->all(),[
+            'name'      => 'required',
             'email'     => 'required|email',
-            'nama'      => 'required',
             'password'  => 'nullable',
-            'photo'     => 'nullable||mimes:png,jpg,jpeg|max:2048'
+            'photo'     => 'nullable|mimes:png,jpg,jpeg|max:2048',
         ]);
-
         if($validator->fails()) return redirect()->back()->withInput()->withErrors($validator);
 
-        $data['email']      = $request->email;
-        $data['name']       = $request->nama;
+        $find = User::find($id);
+
+        $data['name']           = $request->name;
+        $data['email']          = $request->email;
 
         if($request->password){
-            $data['password']   = Hash::make($request->password);
+            $data['password']       = Hash::make($request->password);
         }
 
-        $photo      = $request->file('photo');
+        $photo  = $request->file('photo');
 
-        if ($photo) {
-            $filename   = date('Y-m-d').$photo->getClientOriginalName();
-            $path       = 'photo-user/'.$filename;
+        if($photo) {
 
+            $filename               = date('Y-m-d').$photo->getClientOriginalName();
+            $path                   = 'photo-user/'.$filename;
+
+            if ($find->image) {
+                Storage::disk('public')->delete('photo-user/' . $find->image);
+            }
             Storage::disk('public')->put($path,file_get_contents($photo));
 
             $data['image']  = $filename;
         }
 
-        User::whereId($id)->update($data);
+        $find->update($data);
 
-        return redirect()->route('index');
+        return redirect()->route('admin.index');
     }
 
     public function delete(Request $request,$id){

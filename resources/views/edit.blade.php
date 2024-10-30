@@ -42,8 +42,7 @@
                             @endif
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Photo</label>
-                                <input type="file" class="form-control" id="exampleInputEmail1" name="photo">
-                                <small>Upload foto jika ingin menggantinya</small>
+                                <input type="file" class="form-control" name="photo">
                                 @error('photo')
                                 <br>
                                   <small>{{ $message }}</small>
